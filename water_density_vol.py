@@ -367,7 +367,7 @@ def calculate_stats():
 	#calculate average volumic water density
 	#---------------------------------------	
 	#3D
-	w_density = w_density / float(nb_frames_to_process)
+	w_density = w_density / float(nb_frames_to_process*delta_x*delta_y*delta_z)
 	for nz in range(0, args.sz):
 		#1D
 		w_density_1D[nz] = np.average(w_density[:,:,nz])
@@ -399,7 +399,7 @@ def write_xvg_w_density():
 	#xvg metadata
 	output_xvg.write("@ title \"Water density profile along z\"\n")
 	output_xvg.write("@ xaxis label \"z distance to bilayer center (Angstrom)\"\n")
-	output_xvg.write("@ yaxis label \"water particles relative frequency\"\n")
+	output_xvg.write("@ yaxis label \"water particles relative frequency (A-3)\"\n")
 	output_xvg.write("@ autoscale ONREAD xaxes\n")
 	output_xvg.write("@ TYPE XY\n")
 	output_xvg.write("@ view 0.15, 0.15, 0.95, 0.85\n")
@@ -440,7 +440,7 @@ def graph_w_density():
 	plt.hlines(0, min(coords_z), max(coords_z))
 	plt.hlines(0, min(coords_z), max(coords_z))
 	plt.xlabel('z distance to bilayer center ($\AA$)')
-	plt.ylabel('water partiles relative frequency')
+	plt.ylabel('water partiles relative frequency ($\AA^{-3}$)')
 	
 	#save figure
 	#ax.set_xlim(min(coords_z), max(coords_z))
@@ -490,7 +490,7 @@ def graph_w_density():
 	cax = fig.add_axes([0.85, 0.26, 0.025, 0.48])
 	cbar = fig.colorbar(im, orientation='vertical', cax=cax)
 	cbar.ax.tick_params(axis='y', direction='out')
-	cbar.set_label(r'water particles relative frequency')
+	cbar.set_label(r'water particles relative frequency ($\AA^{-3}$)')
 		
 	#save figure
 	ax.set_xlim(min(coords_x), max(coords_x))
