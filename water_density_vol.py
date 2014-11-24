@@ -198,9 +198,6 @@ else:
 # FUNCTIONS DEFINITIONS
 ##########################################################################################
 
-global nb_x
-global nb_y
-global nb_z	
 global delta_x
 global delta_y
 global delta_z	
@@ -313,14 +310,12 @@ def load_MDA_universe():
 
 def calculate_density(f_index, box_dim):
 	
-	global nb_x
-	global nb_y
-	global nb_z	
 	global delta_x
 	global delta_y
 	global delta_z	
 	global upper
 	global lower
+	global w_density
 
 	#define bins
 	tmp_bins_x = np.linspace(0,box_dim[0],args.sx+1)
@@ -329,9 +324,6 @@ def calculate_density(f_index, box_dim):
 	delta_x = tmp_bins_x[1]-tmp_bins_x[0]
 	delta_y = tmp_bins_y[1]-tmp_bins_y[0]	
 	delta_z = tmp_bins_z[1]-tmp_bins_z[0]
-	nb_x = int(np.floor(args.rc*10/float(delta_x))+1)
-	nb_y = int(np.floor(args.rc*10/float(delta_y))+1)
-	nb_z = int(np.floor(args.rc*10/float(delta_z))+1)
 
 	#store leaflets z position
 	upper[f_index] = upper_sele.centerOfGeometry()[2]
@@ -347,7 +339,7 @@ def calculate_density(f_index, box_dim):
 	w_coord = w_coord.astype(int)
 	
 	#bin water density
-	w_density += np.histogramdd(w_coord,(range(0,args.sx), range(0,args.sy), range(0,args.sz)))[0]
+	w_density += np.histogramdd(w_coord,(range(0,args.sx+1), range(0,args.sx+1), range(0,args.sz+1)))[0]
 
 	return
 def calculate_stats():
@@ -393,7 +385,7 @@ def calculate_stats():
 def write_xvg_w_density():
 	
 	#open files
-	filename_xvg = os.getcwd() + '/' + args.output_folder + '/' + str(args.xtcfilename[:-4]) + '_wdensity_1D.xvg'
+	filename_xvg = os.getcwd() + '/' + args.output_folder + '/' + str(args.xtcfilename[:-4]) + '_w_density_1D.xvg'
 	output_xvg = open(filename_xvg, 'w')
 	
 	#general header
@@ -487,7 +479,7 @@ def graph_w_density():
 	#plot data
 	ax = fig.add_subplot(111)
 	#im = plt.imshow(w_density_2D_oriented, extent = [min(coords_x),max(coords_x),min(coords_z),max(coords_z)], cmap = matplotlib.cm.jet_r, vmin = -0.08, vmax = 0.04)
-	im = plt.imshow(w_density_2D_oriented[19:140,:], extent = [min(coords_x),max(coords_x),-60,60], cmap = matplotlib.cm.jet_r, vmin = -0.06, vmax = 0.03)
+	im = plt.imshow(w_density_2D_oriented[19:140,:], extent = [min(coords_x),max(coords_x),-60,60], cmap = matplotlib.cm.jet_r, vmin = 0, vmax = 0.01)
 	plt.vlines(lower_avg, min(w_density_2D[:,0]), max(w_density_2D[:,0]), linestyles = 'dashed')
 	plt.vlines(upper_avg, min(w_density_2D[:,0]), max(w_density_2D[:,0]), linestyles = 'dashed')
 	plt.vlines(0, min(w_density_2D[:,0]), max(w_density_2D[:,0]), linestyles = 'dashdot')
@@ -564,16 +556,15 @@ else:
 #=========================================================================================
 # process data
 #=========================================================================================
-print "\nCalculating electrostatic potential..."
 calculate_stats()
 
 #=========================================================================================
 # produce outputs
 #=========================================================================================
-print "\n\nWriting outputs..."
+print "\nWriting outputs..."
+graph_w_density()
 write_xvg_w_density()
 write_dx_w_density()
-graph_w_density
 	
 #=========================================================================================
 # exit
