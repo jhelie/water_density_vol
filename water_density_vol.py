@@ -392,7 +392,7 @@ def write_xvg_w_density():
 	output_xvg.write("# [water density profile - written by water_density_vol v" + str(version_nb) + "]\n")
 	output_xvg.write("#  -> nb of slices x and y: " + str(args.sx) + "\n")
 	output_xvg.write("#  -> nb of slices z: " + str(args.sz) + "\n")
-	output_xvg.write("#  -> slices volume: " + str(round(delta_x*delta_y*delta_z,2)) + ") (Angstrom3)\n")
+	output_xvg.write("#  -> slices volume: " + str(round(delta_x*delta_y*delta_z,2)) + " (Angstrom3)\n")
 	output_xvg.write("# nb of frames which contributed to this profile:\n")
 	output_xvg.write("# -> weight = " + str(nb_frames_to_process) + "\n")
 	
